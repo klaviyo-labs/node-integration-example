@@ -1,0 +1,28 @@
+{
+  "name": "@klaviyo-eng/example-typescript-integration",
+  "version": "1.0.0",
+  "description": "Example integration using the Klaviyo node sdk",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.3.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "klaviyo-api": "7.0.0-beta.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "concurrently": "^8.0.1",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.3.1",
+    "typescript": "^5.0.3"
+  }
+}
