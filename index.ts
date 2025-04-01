@@ -14,6 +14,8 @@ import { PrismaClient } from '@prisma/client'
 
 import {PrismaTokenStorage, PrismPkceStorage} from "./storageHelpers";
 
+import {headers} from "next/headers";//if i get rid of this remove next from package.json
+
 // reads the .env file
 dotenv.config();
 
@@ -54,7 +56,7 @@ app.get('/start/:customerIdentifier', async (req: Request, res: Response) => {
       // This is the only way to identify which user just authorized your application (or failed to). `state` is passed back via query parameter to your `redirectUrl`
       req.params.customerIdentifier,
       // The scopes, aka the allowed permissions of the created key. Ensure these permissions are whitelisted in your integration settings
-      "accounts:read campaigns:read campaigns:write catalogs:read catalogs:write coupon-codes:read coupon-codes:write coupons:read coupons:write data-privacy:write events:read events:write flows:read flows:write images:read images:write list:read list:write metrics:read profiles:read profiles:write push-tokens:write segments:read segments:write subscriptions:write tags:read tags:write template:write templates:read",
+      "accounts:read campaigns:read campaigns:write catalogs:read catalogs:write coupon-codes:read coupon-codes:write coupons:read coupons:write data-privacy:write events:read events:write flows:read flows:write images:read images:write lists:read lists:write metrics:read profiles:read profiles:write push-tokens:write segments:read segments:write subscriptions:write tags:read tags:write template:write templates:read",
       // This is the value generated above
       pkceCodes.codeChallenge,
       // This is the URL that Klaviyo will redirect the user to once Authorization is completed (even if it is denied or has an error).
@@ -97,6 +99,52 @@ app.get('/profiles/:customerIdentifier', async (req: Request, res: Response) => 
   // gets the (up to) first 20 profiles for the klaviyo account associated with the customer identifier
   const profiles = (await profileApi.getProfiles()).body
   res.send(profiles)
+})
+
+app.get('/uninstall/:customerIdentifier', async (req: Request, res: Response) => {
+  const secret = process.env.CLIENT_SECRET
+  const clientId = process.env.CLIENT_ID
+
+  const url = "https://a.klaviyo.com/oauth/revoke"
+  let tokens 
+  let refreshToken = ''
+  try{
+     tokens = await tokenStorage.retrieve(req.params.customerIdentifier)
+     refreshToken = tokens.refreshToken
+  } catch (e) {
+    res.send('nono')
+  }
+  const revokeHeaders = {
+    "Authorization": 'Basic '+btoa(`${clientId}:${secret}`),
+    "Content-Type": "application/x-www-form-urlencoded"
+  }
+
+  const data = {
+    "token_type_hint": "refresh_token",
+    "token": refreshToken
+  }
+
+  const URLData = new URLSearchParams(data)
+
+  try {
+    const res = await fetch(url,{
+      method: "POST",
+      headers: revokeHeaders,
+      body: URLData
+    })
+    if (!res.ok) {
+      console.log(res)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const result = await res.json();
+    console.log("Success:", result);
+    // return NextResponse.json({},{status: 200})
+  } catch (e) {
+    console.error("Failed to fetch:", e);
+    return new Response('Error occurred while revoking', {status: 500})
+  }
+
+  res.send(`testing`)
 })
 
 app.listen(port, () => {

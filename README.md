@@ -8,7 +8,7 @@ Klaviyo's new OAuth feature improves the developer experience for users who need
 This app demonstrates how to get started coding an OAuth integration using the [Beta Klaviyo Node SDK](https://github.com/klaviyo/klaviyo-api-node/tree/oauth-beta).
 
 ## Before you begin
- - Check out our [guide for creating an integration](https://help.klaviyo.com/hc/en-us/articles/18819413031067#h_01HACEKGF33GHFEH733YK2JKTT).
+ - Check out our [guides to integrating with Klaviyo](https://developers.klaviyo.com/en/docs/guide_to_integrating_a_platform_without_a_pre_built_klaviyo_integration).
  - See how our [Klaviyo Node SDK](https://github.com/klaviyo/klaviyo-api-node/tree/oauth-beta) makes this process easier.
 
 ## App tools
