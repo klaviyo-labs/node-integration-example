@@ -255,5 +255,7 @@ This will create OAuth info that is associated with this user ID
 
 Once setup is completed test a call with `localhost:8000/profiles/:customerIdentifier` to try a get profiles api call for the provided user.
 
+### Uninstalling the app
 
+To uninstall your app, go to `localhost:8000/uninstall/:customerIdentifier`. This will send the refreshToken to the revoke endpoint and uninstall the app. After uninstalling, you will no longer see it listed as an active integration in Klaviyo.
 

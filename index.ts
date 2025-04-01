@@ -14,8 +14,6 @@ import { PrismaClient } from '@prisma/client'
 
 import {PrismaTokenStorage, PrismPkceStorage} from "./storageHelpers";
 
-import {headers} from "next/headers";//if i get rid of this remove next from package.json
-
 // reads the .env file
 dotenv.config();
 
@@ -102,18 +100,19 @@ app.get('/profiles/:customerIdentifier', async (req: Request, res: Response) => 
 })
 
 app.get('/uninstall/:customerIdentifier', async (req: Request, res: Response) => {
-  const secret = process.env.CLIENT_SECRET
-  const clientId = process.env.CLIENT_ID
-
-  const url = "https://a.klaviyo.com/oauth/revoke"
+// save client and secret for use with tokenStorage
+  const secret = process.env.CLIENT_SECRET;
+  const clientId = process.env.CLIENT_ID;
+  // retrieve refresh Token
   let tokens 
   let refreshToken = ''
   try{
      tokens = await tokenStorage.retrieve(req.params.customerIdentifier)
      refreshToken = tokens.refreshToken
   } catch (e) {
-    res.send('nono')
+    res.send(404)
   }
+  // set up request to revoke endpoint
   const revokeHeaders = {
     "Authorization": 'Basic '+btoa(`${clientId}:${secret}`),
     "Content-Type": "application/x-www-form-urlencoded"
@@ -125,7 +124,8 @@ app.get('/uninstall/:customerIdentifier', async (req: Request, res: Response) =>
   }
 
   const URLData = new URLSearchParams(data)
-
+const url = "https://a.klaviyo.com/oauth/revoke"
+// send refresh token to revoke endpoint to uninstall the app
   try {
     const res = await fetch(url,{
       method: "POST",
@@ -138,13 +138,12 @@ app.get('/uninstall/:customerIdentifier', async (req: Request, res: Response) =>
     }
     const result = await res.json();
     console.log("Success:", result);
-    // return NextResponse.json({},{status: 200})
   } catch (e) {
     console.error("Failed to fetch:", e);
     return new Response('Error occurred while revoking', {status: 500})
   }
-
-  res.send(`testing`)
+// show confirmation that app was uninstalled
+  res.send(`You have successfully uninstalled your app.`)
 })
 
 app.listen(port, () => {
