@@ -7,7 +7,7 @@ An express app to show the basics of making an OAuth integration with Klaviyo.
 Klaviyo's new OAuth feature improves the developer experience for users who need to make API calls from multiple Klaviyo accounts.
 This app demonstrates how to get started coding an OAuth integration using the [Beta Klaviyo Node SDK](https://github.com/klaviyo/klaviyo-api-node/tree/oauth-beta).
 
-For more information, check out our [Academy course on building an OAuth app with Klaviyo](https://academy.klaviyo.com/en-us/courses/build-an-oauth-app-with-klaviyo).
+For more information, check out our [Academy course on building an OAuth app with Klaviyo](https://academy.klaviyo.com/en-us/courses/build-an-oauth-app-with-klaviyo?utm_source=github_node).
 
 ## Before you begin
  - Check out our [guides to integrating with Klaviyo](https://developers.klaviyo.com/en/docs/guide_to_integrating_a_platform_without_a_pre_built_klaviyo_integration).
